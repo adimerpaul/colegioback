@@ -63,4 +63,20 @@ class EstudentController extends Controller
         $estudent->delete();
         return response()->json(['res'=>'Dato eliminado'],200);
     }
+    public function upload(Request $request){
+        $request->validate([
+            'id'=>'required',
+            'imagen'=>'required',
+        ]);
+        if ($request->hasFile('imagen')){
+            $file=$request->file('imagen');
+            $nombre=time().'.'.$file->getClientOriginalExtension();
+            $file->move(public_path('imagenes'),$nombre);
+            $estudent=Estudent::find($request->id);
+            $estudent->imagen=$nombre;
+            $estudent->save();
+            return response()->json(['res'=>'Imagen modificada exitosamente'],200);
+        }
+//        return $request;
+    }
 }
